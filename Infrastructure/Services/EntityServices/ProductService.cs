@@ -59,21 +59,38 @@ namespace Infrastructure.Services.EntityServices
 				CategoryName = product.Category.CategoryName
 			};
 		}
+
+		public async Task<List<ProductGetDTO>> GetByCategoryName(string categoryName)
+		{
+			var filteredProducts = await _productRepository.GetAllAsync();
+			filteredProducts = filteredProducts.Where(p => p.Category.CategoryName.Contains(categoryName)).ToList();
+
+			var productDTOs=filteredProducts.Select(p => new ProductGetDTO
+			{
+				Id = p.Id,
+				ProductName = p.ProductName,
+				Price = p.Price,
+				CategoryId = p.CategoryId,
+				CategoryName = p.Category.CategoryName
+			});
+			return productDTOs.ToList();
+		}
+
 		public async Task<List<ProductGetDTO>> GetAllProductsAsync()
 		{
 			var products = await _productRepository.GetAllProductsEagerLoadingAsync();
 
 
 
-			var listOfProductDTO = products.Select( p =>
+			var listOfProductDTO = products.Select(p =>
 			{
 				return new ProductGetDTO()
 				{
-					Id=p.Id,
+					Id = p.Id,
 					ProductName = p.ProductName,
 					Price = p.Price,
 					CategoryId = p.CategoryId,
-					CategoryName= p.Category.CategoryName
+					CategoryName = p.Category.CategoryName
 				};
 			}).ToList();
 
@@ -100,12 +117,12 @@ namespace Infrastructure.Services.EntityServices
 			return new ProductResponse() { ResponseMessage = "SUCCESS Product updated successfully", StatusCode = HttpStatusCode.OK };
 
 		}
-
+			
 		public async Task<ProductResponse> DeleteProductAsync(int ProductId)
 		{
-			var product=await _productRepository.GetByIdAsync(ProductId);
+			var product = await _productRepository.GetByIdAsync(ProductId);
 
-			if(product is null)
+			if (product is null)
 				return new ProductResponse() { ResponseMessage = "FAIL:Product is not found", StatusCode = HttpStatusCode.NotFound };
 
 			await _productRepository.DeleteAsync(ProductId);
