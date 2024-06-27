@@ -14,7 +14,10 @@ namespace Presentation.Controllers
 	[ApiController]
 	public class ProductController(ProductService productService) : ControllerBase
 	{
-		private readonly ProductService _productService = productService;
+
+        public int SomethingNew { get; set; }
+
+        private readonly ProductService _productService = productService;
 
 		// GET: api/<ProductController>
 		[HttpGet("[Action]")]
