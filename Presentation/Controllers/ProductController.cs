@@ -15,7 +15,7 @@ namespace Presentation.Controllers
 	public class ProductController(ProductService productService) : ControllerBase
 	{
 
-        public int SomethingNew { get; set; }
+        public int SomethingNew2 { get; set; }
 
         private readonly ProductService _productService = productService;
 
